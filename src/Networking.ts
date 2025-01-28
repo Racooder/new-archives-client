@@ -1,7 +1,15 @@
-export var apiUrl: string = "http://localhost:8080";
+export var apiUrl: string = "http://racoonia.net:8080";
 export var user: string | undefined = undefined;
 
 // * Types
+
+export type Archive = {
+    name: string;
+    owner: string;
+    maintainers: string[];
+    createdAt: Date;
+    updatedAt: Date;
+};
 
 type DocumentMeta = {
     archive: string;
@@ -13,7 +21,7 @@ type DocumentMeta = {
     maintainers: string[];
     createdAt: Date;
     updatedAt: Date;
-}
+};
 
 export type Record = {
     _id: string;
@@ -25,7 +33,7 @@ export type Record = {
     maintainers: string[];
     createdAt: Date;
     updatedAt: Date;
-}
+};
 
 type RecordQuery = {
     name?: string,
@@ -36,6 +44,9 @@ type RecordQuery = {
 
 // * Helper Functions
 
+/**
+ * @throws {Error} If the response is an error
+ */
 async function sendRequest(url: string, method: string, body?: any) {
     const init: RequestInit = { method };
     if (body !== undefined) {
@@ -44,7 +55,30 @@ async function sendRequest(url: string, method: string, body?: any) {
     }
 
     const response = await fetch(apiUrl + url, init);
+
+    if (response.status >= 400) {
+        window.location.href = `/error/${response.status}`;
+        throw new Error(await response.text());
+    }
+
     return await response.json();
+}
+
+function populateDates(data: any) {
+    data.createdAt = new Date(data.createdAt);
+    data.updatedAt = new Date(data.updatedAt);
+}
+
+// * Archives
+
+export async function listArchives(): Promise<string[]> {
+    return await sendRequest(`/archives`, "GET");
+}
+
+export async function getArchive(name: string): Promise<Archive> {
+    const data = await sendRequest(`/archive/${name}`, "GET");
+    populateDates(data);
+    return data;
 }
 
 // * Records
@@ -55,7 +89,9 @@ export async function findRecords(archive: string, query: RecordQuery): Promise<
 }
 
 export async function getRecord(archive: string, id: string): Promise<Record> {
-    return await sendRequest(`/record/${archive}/${id}`, "GET");
+    const data = await sendRequest(`/record/${archive}/${id}`, "GET");
+    populateDates(data);
+    return data;
 }
 
 // * Documents
@@ -65,16 +101,27 @@ export function documentObjectUrl(archive: string, hash: string): string {
 }
 
 export async function getDocumentMeta(archive: string, hash: string): Promise<DocumentMeta> {
-    return await sendRequest(`/document/${archive}/${hash}/meta`, "GET");
+    const data = await sendRequest(`/document/${archive}/${hash}/meta`, "GET");
+    populateDates(data);
+    return data;
 }
 
-export async function uploadDocument(file: File, archive: string, archivist: string) {
+export async function uploadDocuments(files: FileList, archive: string, archivist: string): Promise<string[]> {
     const formData = new FormData();
-    formData.append("file", file);
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        formData.append("files", file);
+    }
+    formData.append("archive", archive);
+    formData.append("archivist", archivist);
 
     const response = await fetch(apiUrl + "/document", {
         method: "POST",
         body: formData
     });
     return await response.json();
+}
+
+export async function getUnsorted(archive: string): Promise<string[]> {
+    return await sendRequest(`/unsorted/${archive}`, "GET");
 }

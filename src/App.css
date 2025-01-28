@@ -1,38 +1,51 @@
-.App {
-  text-align: center;
+@import '../node_modules/mini.css/dist/mini-default.min.css';
+
+html {
+    --text-color: white;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+html, body, #root {
+    height: 100%;
+    margin: 0;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+body {
+    background-color: hsl(0, 0%, 23%);
+    color: hsl(0, 0%, 100%);
+    text-align: center;
+    color: var(--text-color);
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+#error-container {
+    width: 100%;
+    height: 100%;
+    background-color: black;
 }
 
-.App-link {
-  color: #61dafb;
+#error-image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 100%;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.dynamic-menu-holder {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    gap: 0.5em
+}
+
+.dynamic-menu-element {
+    border-radius: 1em;
+    width: 50em;
+    background-color: hsl(0, 0%, 19%);
+    color: var(--text-color);
+    transition: 0.2s ease;
+    padding: 0.2em;
+}
+
+.dynamic-menu-element:hover {
+    box-shadow: 0.3em 0.3em hsla(0, 0%, 57%, 0.552);
 }

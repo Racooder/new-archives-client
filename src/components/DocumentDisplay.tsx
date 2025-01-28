@@ -17,7 +17,7 @@ function documentDisplay(fileType: string, objectUrl: string) {
     }
 }
 
-export default function DocumentDisplay({archive, hash}: { archive: string, hash: string }) {
+export default function DocumentDisplay({ archive, hash }: { archive: string, hash: string }) {
     const [data, setData] = useState<DocViewData>();
 
     useEffect(() => {
@@ -35,9 +35,7 @@ export default function DocumentDisplay({archive, hash}: { archive: string, hash
         return <p>Loading...</p>;
     }
 
-    return (
-        <>
-            {documentDisplay(data.fileType, data.objectUrl)}
-        </>
-    );
+    return (<>
+        {documentDisplay(data.fileType, data.objectUrl)}
+    </>);
 }

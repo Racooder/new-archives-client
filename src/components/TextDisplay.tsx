@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function TextDisplay({dataUrl}: { dataUrl: string }) {
+export default function TextDisplay({ dataUrl }: { dataUrl: string }) {
     const [data, setData] = useState("");
 
     useEffect(() => {
@@ -16,5 +16,5 @@ export default function TextDisplay({dataUrl}: { dataUrl: string }) {
         return <div>Loading...</div>;
     }
 
-    return <>{data}</>;
+    return (<p>{data}</p>);
 }

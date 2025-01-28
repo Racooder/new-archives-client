@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { findRecords, Record } from "../Networking";
-import { Link, useParams, useSearchParams } from "react-router";
+import { useParams, useSearchParams } from "react-router";
+import LinkButton from "./LinkButton";
 
-export default function RecordList() {
+export default function RecordListView() {
     const params = useParams();
     const [searchParams] = useSearchParams();
     const [records, setRecords] = useState<Record[]>([]);
@@ -25,15 +26,10 @@ export default function RecordList() {
         getData();
     }, [searchParams, params]);
 
-    return (
-        <>
-            {records.map((record, i) => (
-                <Link key={i} to={`/a/${params.archive}/r/${record._id}`}>
-                    <span>
-                        {record.name}
-                    </span>
-                </Link>
-            ))}
-        </>
-    );
+    return (<>
+        <h1>Records ({params.archive})</h1>
+        {records.map((record, i) => (
+            <LinkButton to={`/a/${record.archive}/r/${record._id}`} content={record.name} key={i} />
+        ))}
+    </>);
 }
